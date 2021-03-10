@@ -2,11 +2,11 @@ package com.example.wellnessroomv1
 
 class ScanCheckInteractor {
 
+    val dictionary: MutableList<String> = arrayListOf()
     // t=20201213T194500 & s=54.00 & fn=9289440300637432 & i=17173 & fp=4107152669 & n=1
 
     fun makeDataDictionary(rawData: String): List<String> {
         val components = rawData.split("&")
-        val dictionary: MutableList<String> = arrayListOf()
         for (i in components){
             val keyValue = i.split("=")
             dictionary.add(keyValue[1])
@@ -15,7 +15,11 @@ class ScanCheckInteractor {
         return dictionary
     }
 
-    fun makeDocDateTime(){
-
+    fun makeDocDateTime(): String{
+        return if (dictionary[0].length > 13){
+            dictionary.take(13).toString()
+        } else {
+            dictionary[0]
+        }
     }
 }

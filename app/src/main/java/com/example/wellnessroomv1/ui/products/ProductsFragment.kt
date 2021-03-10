@@ -44,9 +44,8 @@ class ProductsFragment : Fragment() {
         viewAdapter.notifyDataSetChanged()
 
         button_scan_check.setOnClickListener {
-            /*val intent = Intent(this.activity, ScannerActivity::class.java)
-            startActivityForResult(intent, 1)*/
-            scanQRCode()
+            val intent = Intent(this.activity, ScannerActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -61,40 +60,4 @@ class ProductsFragment : Fragment() {
             Product("Kit-Kat", 39.99, "29.11.2020")
         )
     }
-
-    private fun scanQRCode() {
-        val integrator = IntentIntegrator(this.activity).apply {
-            captureActivity = CaptureActivity::class.java
-            setOrientationLocked(false)
-            setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES)
-            setPrompt("Наведите камеру на QR-code")
-        }
-        integrator.initiateScan()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
-
-        Log.d("Check", result.toString())
-
-        if (result != null) {
-            if (result.contents == null) {
-                Toast.makeText(context, "Cancelled", Toast.LENGTH_LONG).show()
-            } else {
-                Toast.makeText(context, "Scanned: " + result.contents, Toast.LENGTH_LONG).show()
-                Log.d("Check", "Check result: " + result.contents)
-
-                val rawData = result.contents
-                val scanInteractor = ScanCheckInteractor()
-                val dictionary = scanInteractor.makeDataDictionary(rawData)
-
-                Log.d("Check", "Dictionary: $dictionary")
-
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
-    }
-
-
 }

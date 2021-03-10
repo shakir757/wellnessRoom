@@ -102,6 +102,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_view_vitamins">
 
+        <TextView
+            android:id="@+id/text_view_vit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="4dp"
+            android:text="Белки: \nЖиры: \nУглеводы: \nВитамин D: \nВитамин E: \nВитамин K:"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
