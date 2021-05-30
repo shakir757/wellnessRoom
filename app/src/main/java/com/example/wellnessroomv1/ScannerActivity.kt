@@ -13,7 +13,6 @@ import com.journeyapps.barcodescanner.CaptureActivity
 
 class ScannerActivity : AppCompatActivity() {
 
-    private var checkDictionary: List<String> = listOf()
     private val checkViewModel = CheckViewModel()
     private val scanInteractor = ScanCheckInteractor()
     private val TOKEN = "1393.UgJKe7UUCJCf7ARal"
@@ -23,7 +22,6 @@ class ScannerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_scanner)
 
         scanQRCode()
-        observeCheckLiveData()
     }
 
     private fun scanQRCode() {
@@ -45,41 +43,42 @@ class ScannerActivity : AppCompatActivity() {
                 Log.d("Check", "Check result: " + result.contents)
 
                 val rawData = result.contents
-                checkDictionary = scanInteractor.makeDataDictionary(rawData)
+                val checkDictionary = scanInteractor.makeDataDictionary(rawData)
 
                 Log.d("Check", "Dictionary: $checkDictionary")
-                Toast.makeText(this, "Check: $checkDictionary", Toast.LENGTH_SHORT).show()
-                checkViewModel.getNewCheck(
+                Toast.makeText(this, "Чек отсканирован!", Toast.LENGTH_SHORT).show()
+                // Toast.makeText(this, "Check: $checkDictionary", Toast.LENGTH_SHORT).show()
+
+                checkViewModel.fetchNewCheck(
                     DataBodyCheck(
-                        "9289440300637432", "17173", "4107152669", "1", "5400", "20201213T1945", "0", TOKEN
-                    )
-                )
+                        checkDictionary[2],
+                        checkDictionary[3],
+                        checkDictionary[4],
+                        checkDictionary[5].toInt().toString(),
+                        checkDictionary[1].toDouble().toString(),
+                        scanInteractor.makeDocDateTime(),
+                        "0",
+                        TOKEN
+                    ), {
+                        Log.d("Check", "CreditSum: " + it.totalSum.toString())
+                        Toast.makeText(this, "parse! $it", Toast.LENGTH_LONG).show()
+                    }
+                ) {
+                    Toast.makeText(
+                        this,
+                        "Ошибка при получении чека",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
 
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
+
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
         }
-    }
-
-    private fun observeCheckLiveData(){
-        /*checkViewModel.getNewCheck(DataBodyCheck(
-            checkDictionary[2],
-            checkDictionary[3],
-            checkDictionary[4],
-            checkDictionary[5].toInt().toString(),
-            checkDictionary[1].toDouble().toString(),
-            scanInteractor.makeDocDateTime(),
-            "0",
-            TOKEN
-        ))*/
-
-        checkViewModel.checkLiveData.observe(this, Observer {
-            it?.let {
-                Log.d("Check", it.code.toString())
-                Toast.makeText(this, "parse! $it", Toast.LENGTH_LONG).show()
-            }
-        })
     }
 }

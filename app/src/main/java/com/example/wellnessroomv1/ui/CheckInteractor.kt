@@ -1,9 +1,13 @@
 package com.example.wellnessroomv1.ui
 
+import android.util.Log
+import com.example.wellnessroomv1.BuildConfig
 import com.example.wellnessroomv1.ui.check_api.CheckApi
 import com.example.wellnessroomv1.ui.check_api.DataBodyCheck
 import com.example.wellnessroomv1.ui.check_api.JsonCheck
 import io.reactivex.Single
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -15,12 +19,31 @@ class CheckInteractor {
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        .client(
+            OkHttpClient().newBuilder()
+                .addInterceptor(HttpLoggingInterceptor().apply {
+                    if (BuildConfig.DEBUG) {
+                        setLevel(HttpLoggingInterceptor.Level.BODY)
+                    }
+                }).build())
         .build()
         .create(CheckApi::class.java)
 
     fun getNewCheck(dataBodyCheck: DataBodyCheck): Single<JsonCheck> {
-        return Single.fromObservable(checkApi.getCheckInfo(dataBodyCheck)).map {
-            it.data.json
-        }
+        return Single.fromObservable(
+            checkApi.getCheckInfo(
+                dataBodyCheck.fn,
+                dataBodyCheck.fd,
+                dataBodyCheck.fp,
+                dataBodyCheck.n,
+                dataBodyCheck.s,
+                dataBodyCheck.t,
+                dataBodyCheck.qr,
+                dataBodyCheck.token
+            ).map {
+                Log.d("Check", "check: " + it.data.json.toString())
+                it.data.json
+            }
+        )
     }
 }

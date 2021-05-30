@@ -15,4 +15,6 @@
 
     <color name="colorGreen">#179800</color>
     <color name="colorRed">#8A092F</color>
+
+    <color name="colorBackgroundNumberScreen">#E7D2CA</color>
 </resources>

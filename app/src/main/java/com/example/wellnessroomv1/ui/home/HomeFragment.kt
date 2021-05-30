@@ -36,13 +36,13 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        text_view_date_now.text = getDate()
+        text_view_date_main.text = getDate()
 
         var buttonsCount = 0
         image_button_step_back.setOnClickListener {
             // пилим через костыли
             day--
-            text_view_date_now.text = getDate()
+            text_view_date_main.text = getDate()
 
             image_button_step_up.visibility = View.VISIBLE
             buttonsCount++
@@ -62,7 +62,7 @@ class HomeFragment : Fragment() {
 
         image_button_step_up.setOnClickListener {
             day++
-            text_view_date_now.text = getDate()
+            text_view_date_main.text = getDate()
 
             buttonsCount--
 

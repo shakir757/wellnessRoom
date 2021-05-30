@@ -17,7 +17,7 @@ class ScanCheckInteractor {
 
     fun makeDocDateTime(): String{
         return if (dictionary[0].length > 13){
-            dictionary.take(13).toString()
+            dictionary[0].take(13)
         } else {
             dictionary[0]
         }

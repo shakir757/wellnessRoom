@@ -7,7 +7,7 @@ import org.json.JSONObject
 
 @Parcelize
 data class DataCheck(
-    @SerializedName("data")
+    @SerializedName("json")
     val json: JsonCheck,
     @SerializedName("html")
     val html: String
